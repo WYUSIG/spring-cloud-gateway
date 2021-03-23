@@ -56,6 +56,12 @@ private final RouteLocator routeLocator;
 
 ##### RouteLocator相关类简介
 
+- **RouteLocator**：各种RouteLocator顶级接口，里面只有一个方法，获得Route Flux流
+
+  ```java
+  Flux<Route> getRoutes();
+  ```
+
 - **RouteDefinitionRouteLocator**：通过getRoutes()方法把RouteDefinitionLocator的Flux<RouteDefinition>转成Flux<Route>，里面涉及到List<PredicateDefinition>转成链式的AsyncPredicate<ServerWebExchange>，合并defaultFilters 与 RouteDefinition的List<FilterDefinition>，变成List<GatewayFilter>，最后调用Route的建造者模式变成一个Route
 
 - **自定义RouteLocator**：
@@ -98,7 +104,7 @@ public class GatewayAutoConfiguration{
 		return new InMemoryRouteDefinitionRepository();
 	}
     
-     //首先List<RouteDefinitionLocator> routeDefinitionLocators是集合类型依赖注入，IOC容器会找所有RouteDefinitionLocator类型的Bean，也就是  收集了配置文件、存储器、注册中心的各种RouteDefinitionLocator其次这个Bean标注了@Primary，也就代表如果其他如果要注入RouteDefinitionLocator类型Bean就会注入CompositeRouteDefinitionLocator，因为它是Primary的通过这样统一各种RouteDefinitionLocator的入口
+     //首先List<RouteDefinitionLocator> routeDefinitionLocators是集合类型依赖注入，IOC容器会找所有RouteDefinitionLocator类型的Bean，也就是  收集了配置文件、存储器、注册中心的各种RouteDefinitionLocator，其次这个Bean标注了@Primary，也就代表如果其他如果要注入RouteDefinitionLocator类型Bean就会注入CompositeRouteDefinitionLocator，因为它是Primary的，通过这样统一各种RouteDefinitionLocator的入口
     @Bean
 	@Primary
 	public RouteDefinitionLocator routeDefinitionLocator(
