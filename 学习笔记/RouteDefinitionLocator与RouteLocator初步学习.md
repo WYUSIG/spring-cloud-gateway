@@ -113,6 +113,17 @@ public class GatewayAutoConfiguration{
 				Flux.fromIterable(routeDefinitionLocators));
 	}
     
+    //RouteDefinitionRouteLocator,注入的就是CompositeRouteDefinitionLocator
+    @Bean
+	public RouteLocator routeDefinitionRouteLocator(GatewayProperties properties,
+			List<GatewayFilterFactory> GatewayFilters,
+			List<RoutePredicateFactory> predicates,
+			RouteDefinitionLocator routeDefinitionLocator,
+			@Qualifier("webFluxConversionService") ConversionService conversionService) {
+		return new RouteDefinitionRouteLocator(routeDefinitionLocator, predicates,
+				GatewayFilters, properties, conversionService);
+	}
+    
     //首先List<RouteLocator> routeLocators是集合类型依赖注入，IOC容器会找所有RouteLocator类型的Bean，也就是收集RouteDefinitionRouteLocator和自定义RouteLocator 的各种RouteLocator其次这个Bean标注了@Primary，也就代表如果其他如果要注入RouteLocator类型的Bean就会注入CachingRouteLocator，因为它是Primary的，特别关注的是RoutePredicateHandlerMapping的注入，而CachingRouteLocator里面写死了newCompositeRouteLocator(Flux.fromIterable(routeLocators))，即统一了入口又把Route缓存了
     @Bean
 	@Primary
