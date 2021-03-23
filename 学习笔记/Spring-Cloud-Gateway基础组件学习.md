@@ -1,7 +1,6 @@
 ## Spring-Cloud-Gateway源码系列学习
 
-版本 v2.2.5.RELEASE
-
+版本 v2.2.6.RELEASE
 [TOC]
 
 ### 环境准备
